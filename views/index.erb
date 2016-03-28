@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/css/styles.css">
+  </head>
+  <body>
+
+    <div class="container">
+
+      <h1>DL Open Source Contributors</h1>
+      <h2>Public GitHub activity by Detroit Labs team members, in the last 90 days.</h2>
+
+      <ul class="contributors">
+        <% for @contributor in @contributors %>
+          <li class="contributor">
+            <div class="avatar-container">
+              <a href="<%= @contributor["user"]["html_url"] %>">
+                <span class="avatar" style="background-image: url(<%= @contributor["user"]["avatar_url"] %>);"></span>
+              </a>
+            </div>
+
+            <div class="activity">
+              <strong class="contributor-username">
+                <a href="<%= @contributor["user"]["html_url"] %>">
+                  <%= @contributor["user"]["login"] %>
+                </a>
+              </strong>
+
+              <ul class="activity-events">
+                <% @contributor["activity"].each do |event_type,count| %>
+                  <li><%= "#{event_type}: #{count}" %></li>
+                <% end %>
+              </ul>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+  </body>
+</html>

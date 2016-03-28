@@ -1,0 +1,52 @@
+
+body {
+    font-family: 'Open Sans', open-sans, sans-serif
+    background-color: #ccc;
+}
+
+ul {
+    padding: 0;
+    list-style: none;
+}
+
+.container {
+    width: 80%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.contributors {
+}
+
+.contributor {
+    float: left;
+    width: 48%;
+    min-height: 100px;
+    margin-bottom: 20px;
+}
+
+.contributor:nth-child(odd) {
+    margin-right: 4%;
+}
+
+.avatar-container {
+    float: left;
+    width: 100px;
+    height: 100px;
+    margin-right:10px
+}
+
+.avatar {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    background: no-repeat center/cover;
+}
+
+.contibutor-username {
+}
+
+.activity-events {
+
+}
