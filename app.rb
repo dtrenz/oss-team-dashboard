@@ -6,6 +6,7 @@ require "octokit"
 github_login = "dl-leeroy"
 github_password = "zyde3xo9ne1whoh1re8do7wu7he5ne"
 
+Octokit.auto_paginate = true
 Octokit.configure do |c|
   c.login = github_login
   c.password = github_password
@@ -54,12 +55,6 @@ end
 
 def processContributors
   contributors = []
-
-  # members = [
-  #   { :login => "dtrenz" },
-  #   { :login => "btkelly" },
-  #   { :login => "northofnormal" },
-  # ]
 
   members = fetchMembers("detroit-labs")
 
