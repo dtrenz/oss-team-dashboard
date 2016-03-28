@@ -1,15 +1,18 @@
 require "json"
+
+# gems
+require "dotenv"
 require "sinatra"
 require "octokit"
 
-
-github_login = "dl-leeroy"
-github_password = "zyde3xo9ne1whoh1re8do7wu7he5ne"
+# load environment vars
+Dotenv.load
 
 Octokit.auto_paginate = true
+
 Octokit.configure do |c|
-  c.login = github_login
-  c.password = github_password
+  c.login = ENV["GITHUB_LOGIN"]
+  c.password = ENV["GITHUB_PASSWORD"]
 end
 
 not_found do
@@ -56,7 +59,7 @@ end
 def processContributors
   contributors = []
 
-  members = fetchMembers("detroit-labs")
+  members = fetchMembers(ENV["GITHUB_TEAM_ID"])
 
   members.each do |user|
     events = Octokit.user_public_events(user[:login], { :per_page => 100 })
@@ -81,10 +84,10 @@ def processContributors
   return contributors
 end
 
-def fetchMembers(org)
+def fetchMembers(team_id)
   blacklist = [ "houndci-bot" ]
 
-  members = Octokit.team_members(61888, { :per_page => 100 })
+  members = Octokit.team_members(team_id, { :per_page => 100 })
 
   members.select! { |member| !blacklist.include?(member.login) }
 
@@ -103,21 +106,9 @@ end
 
 def tally(events)
   relevant_events = [
-    # "CommitCommentEvent",
-    # "CreateEvent",
-    # "DeleteEvent",
-    # "DeploymentEvent",
-    # "DeploymentStatusEvent",
-    # "DownloadEvent",
-    # "FollowEvent",
-    # "ForkEvent",
-    # "ForkApplyEvent",
     "GistEvent",
-    # "GollumEvent",
     "IssueCommentEvent",
     "IssuesEvent",
-    # "MemberEvent",
-    # "MembershipEvent",
     "PageBuildEvent",
     "PublicEvent",
     "PullRequestEvent",
@@ -125,9 +116,6 @@ def tally(events)
     "PushEvent",
     "ReleaseEvent",
     "RepositoryEvent",
-    # "StatusEvent",
-    # "TeamAddEvent",
-    # "WatchEvent",
   ]
 
   tally = {}
