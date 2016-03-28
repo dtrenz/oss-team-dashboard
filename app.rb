@@ -64,7 +64,7 @@ def processContributors
   members = fetchMembers("detroit-labs")
 
   members.each do |user|
-    events = Octokit.user_public_events(user[:login])
+    events = Octokit.user_public_events(user[:login], { :per_page => 100 })
 
     events.map! { |event|
       {
@@ -89,7 +89,7 @@ end
 def fetchMembers(org)
   blacklist = [ "houndci-bot" ]
 
-  members = Octokit.org_members(org)
+  members = Octokit.team_members(61888, { :per_page => 100 })
 
   members.select! { |member| !blacklist.include?(member.login) }
 
