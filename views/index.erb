@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
   <head>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,300,100,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/css/styles.css">
   </head>
   <body>
@@ -10,8 +11,11 @@
       <h1>DL Open Source Contributors</h1>
       <h2>Public GitHub activity by Detroit Labs team members, in the last 90 days.</h2>
 
+      <%= @test %>
+
       <ul class="contributors">
         <% for @contributor in @contributors %>
+
           <li class="contributor">
             <div class="avatar-container">
               <a href="<%= @contributor["user"]["html_url"] %>">
@@ -20,21 +24,26 @@
             </div>
 
             <div class="activity">
-              <strong class="contributor-username">
+              <h3 class="contributor-username">
                 <a href="<%= @contributor["user"]["html_url"] %>">
                   <%= @contributor["user"]["login"] %>
                 </a>
-              </strong>
+              </h3>
 
               <ul class="activity-events">
-                <% @contributor["activity"].each do |event_type,count| %>
-                  <li><%= "#{event_type}: #{count}" %></li>
+                <% @contributor["activity"].each do |type,count| %>
+                  <% if @descriptions.key?(type) %>
+                    <li class="event"><%= @descriptions[type] % count %></li>
+                  <% end %>
                 <% end %>
               </ul>
           </li>
+
         <% end %>
       </ul>
     </div>
+
+    <footer>Data last updated on <%= @updated.strftime("%A, %B %d at %I:%M:%S %p") %>.</footer>
 
   </body>
 </html>
