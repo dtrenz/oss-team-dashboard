@@ -6,8 +6,8 @@ body {
 
 h1, h2, h3 { margin: 0 0 0.4em 0; }
 
-h1 { font-weight: 400; }
-h2 { font-weight: 300; color: #ddd; }
+h1 { font-weight: 400; text-align: center; }
+h2 { font-weight: 300; text-align: center; color: #aaa; }
 h3 { font-weight: 700; }
 
 a {
@@ -15,13 +15,15 @@ a {
   text-decoration: none;
 }
 
+a:hover { color: #2196f3; }
+
 ul {
   padding: 0;
   list-style: none;
 }
 
 .container {
-  width: 100%;
+  width: 90%;
   /*max-width: 960px;*/
   margin: 0 auto;
 }
@@ -31,8 +33,7 @@ footer {
   padding: 20px;
   margin-top: 50px;
   font-weight: 100;
-  font-style: italic;
-  font-size: 0.9em;
+  font-size: 0.8em;
   text-align: center;
   color: #aaa;
 }
@@ -43,14 +44,15 @@ footer {
 
 .contributor {
   float: left;
-  width: 33%;
+  width: 32%;
   /*width: 48%;*/
   min-height: 140px;
   margin-bottom: 2em;
+  margin-right: 2%;
 }
 
-.contributor:nth-child(odd) {
-  /*margin-right: 4%;*/
+.contributor:nth-child(3n) {
+  margin-right: 0%;
 }
 
 .avatar-container {
