@@ -13,6 +13,7 @@ not_found do
 end
 
 get "/" do
+  @org_name = ENV["ORG_DISPLAY_NAME"]
   @descriptions = {
     "GistEvent" => "📄 Published <em>%d</em> public gist(s).",
     "IssueCommentEvent" => "📝 Posted <em>%d</em> issue comment(s).",
