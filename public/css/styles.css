@@ -28,9 +28,14 @@ ul {
   margin: 0 auto;
 }
 
+header {
+  margin-bottom: 80px
+}
+
 footer {
   clear: both;
-  padding: 20px;
+  width: 100%;
+  padding: 20px 0;
   margin-top: 50px;
   font-weight: 100;
   font-size: 0.8em;
@@ -45,7 +50,7 @@ footer {
 .contributor {
   float: left;
   width: 32%;
-  min-height: 200px;
+  min-height: 240px;
   margin-bottom: 2em;
   margin-right: 2%;
 }
@@ -80,7 +85,7 @@ footer {
   padding-top: 5px;
   border-top: 1px dotted rgba(255, 255, 255, 0.2);
   font-weight: 300;
-  font-size: 0.9em;
+  font-size: 0.85em;
 }
 
 .event {

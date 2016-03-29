@@ -3,15 +3,16 @@
   <head>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,300,100,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/css/styles.css">
+    <script src="/js/script.js" type="text/javascript" charset="utf-8" async defer></script>
   </head>
   <body>
 
     <div class="container">
 
-      <h1>Open Source Contributors</h1>
-      <h2>Public GitHub activity by <%= @org_name %> team members, in the last 90 days.</h2>
-
-      <%= @test %>
+      <header>
+        <h1>Open Source Contributors</h1>
+        <h2>Public GitHub activity by <%= @org_name %> team members, in the last 90 days.</h2>
+      </header>
 
       <ul class="contributors">
         <% for @contributor in @contributors %>
