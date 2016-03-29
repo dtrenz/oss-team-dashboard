@@ -7,12 +7,12 @@
   </head>
   <body>
 
-    <div class="container">
+    <header>
+      <h1>Open Source Contributors</h1>
+      <h2>Public GitHub activity by <%= @org_name %> team members, in the last 90 days.</h2>
+    </header>
 
-      <header>
-        <h1>Open Source Contributors</h1>
-        <h2>Public GitHub activity by <%= @org_name %> team members, in the last 90 days.</h2>
-      </header>
+    <div class="container">
 
       <ul class="contributors">
         <% for @contributor in @contributors %>
