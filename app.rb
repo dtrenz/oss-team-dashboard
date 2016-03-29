@@ -2,18 +2,11 @@ require "json"
 
 # gems
 require "dotenv"
+require "redis"
 require "sinatra"
-require "octokit"
+require "tilt/erb"
 
-# load environment vars
 Dotenv.load
-
-Octokit.auto_paginate = true
-
-Octokit.configure do |c|
-  c.login = ENV["GITHUB_LOGIN"]
-  c.password = ENV["GITHUB_PASSWORD"]
-end
 
 not_found do
   status 404
@@ -33,105 +26,15 @@ get "/" do
     "RepositoryEvent" => "📁 Created <em>%d</em> public repo(s).",
   }
 
-  File.open("data.txt", "r") do |file|
-    @contributors = JSON.parse(file.read)
-  end
+  redis = Redis.new
 
-  @updated = File.mtime("data.txt")
+  contributorsJSON = redis.get("contributors")
+  last_updated_string = redis.get("last_updated")
+
+  unless contributorsJSON.nil?
+    @contributors = JSON.parse(contributorsJSON)
+    @updated = DateTime.parse(last_updated_string)
+  end
 
   erb :index
-end
-
-get "/refresh-data" do
-  contributors = processContributors()
-
-  contributors = JSON.fast_generate(contributors)
-
-  File.open("data.txt", "w") { |file|
-    file.write(contributors)
-  }
-
-  return contributors
-end
-
-## funcs
-
-def processContributors
-  contributors = []
-
-  members = fetchMembers(ENV["GITHUB_TEAM_ID"])
-
-  members.each do |user|
-    events = Octokit.user_public_events(user[:login], { :per_page => 100 })
-
-    events.map! { |event|
-      {
-        :type => event.type,
-        :repo => event.repo,
-      }
-    }
-
-    activity = tally(events)
-
-    unless activity.empty?
-      contributors.push(
-        :user => user,
-        :activity => activity,
-      )
-    end
-  end
-
-  return contributors
-end
-
-def fetchMembers(team_id)
-  blacklist = [ "houndci-bot" ]
-
-  members = Octokit.team_members(team_id, { :per_page => 100 })
-
-  members.select! { |member| !blacklist.include?(member.login) }
-
-  members.map! { |user|
-    {
-      :login => user.login,
-      :avatar_url => user.avatar_url,
-      :html_url => user.html_url,
-    }
-  }
-
-  members.sort_by! { |member| member[:login].downcase }
-
-  return members
-end
-
-def tally(events)
-  relevant_events = [
-    "GistEvent",
-    "IssueCommentEvent",
-    "IssuesEvent",
-    "PageBuildEvent",
-    "PublicEvent",
-    "PullRequestEvent",
-    "PullRequestReviewCommentEvent",
-    "PushEvent",
-    "ReleaseEvent",
-    "RepositoryEvent",
-  ]
-
-  tally = {}
-
-  events.each do |event|
-    event_type = event[:type]
-    if relevant_events.include?(event_type)
-      unless tally.key?(event_type)
-        tally[event_type] = 0
-      end
-
-      tally[event_type] += 1
-    end
-  end
-
-  tally = tally.sort.to_h
-
-  return tally
 end
