@@ -1,7 +1,12 @@
 require "json"
 
 # gems
+require "dotenv"
+require "redis"
 require "sinatra"
+require "tilt/erb"
+
+Dotenv.load
 
 not_found do
   status 404
@@ -21,11 +26,15 @@ get "/" do
     "RepositoryEvent" => "📁 Created <em>%d</em> public repo(s).",
   }
 
-  File.open("data.txt", "r") do |file|
-    @contributors = JSON.parse(file.read)
-  end
+  redis = Redis.new
 
-  @updated = File.mtime("data.txt")
+  contributorsJSON = redis.get("contributors")
+  last_updated_string = redis.get("last_updated")
+
+  unless contributorsJSON.nil?
+    @contributors = JSON.parse(contributorsJSON)
+    @updated = DateTime.parse(last_updated_string)
+  end
 
   erb :index
 end

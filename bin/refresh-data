@@ -5,6 +5,7 @@ require "json"
 # gems
 require "dotenv"
 require "octokit"
+require "redis"
 
 ## funcs
 
@@ -99,12 +100,11 @@ Octokit.configure do |c|
   c.access_token = ENV["GITHUB_ACCESS_TOKEN"]
 end
 
-contributors = processContributors()
+redis = Redis.new
 
+contributors = processContributors()
 contributors = JSON.fast_generate(contributors)
 
-File.open("data.txt", "w") { |file|
-  file.write(contributors)
-}
-
+redis.set("contributors", contributors)
+redis.set("last_updated", DateTime.now.to_s)
 
