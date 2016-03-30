@@ -1,4 +1,5 @@
 require "json"
+require "yaml"
 
 # gems
 require "dotenv"
@@ -6,14 +7,20 @@ require "redis"
 require "sinatra"
 require "tilt/erb"
 
+
+# load environment vars
 Dotenv.load
+
+# load settings
+$settings = YAML.load(File.open("./settings.yml"))
 
 not_found do
   status 404
 end
 
 get "/" do
-  @org_name = ENV["ORG_DISPLAY_NAME"]
+  @team_name = $settings["team_name"] || "your team"
+
   @descriptions = {
     "GistEvent" => "📄 Published <em>%d</em> public gist(s).",
     "IssueCommentEvent" => "📝 Posted <em>%d</em> issue comment(s).",

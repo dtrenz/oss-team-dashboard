@@ -1,0 +1,10 @@
+# The display name of the team
+team_name: Detroit Labs
+
+# The ID for the GitHub team that you would like to display
+team_id: 61888
+
+# These users will be excluded from the dashboard
+blacklist:
+  - dl-leeroy
+  - houndci-bot

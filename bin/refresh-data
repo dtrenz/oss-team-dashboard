@@ -1,18 +1,28 @@
 #!/usr/bin/env ruby
 
 require "json"
+require "yaml"
 
 # gems
 require "dotenv"
 require "octokit"
 require "redis"
 
-## funcs
+
+#############
+# Functions #
+#############
 
 def processContributors
   contributors = []
 
-  members = fetchMembers(ENV["GITHUB_TEAM_ID"])
+  team_id = $settings["team_id"]
+
+  if team_id.nil?
+    abort("No team_id set in settings.yml.")
+  end
+
+  members = fetchMembers(team_id)
 
   members.each do |user|
     events = Octokit.user_public_events(user[:login], { :per_page => 100 })
@@ -38,7 +48,7 @@ def processContributors
 end
 
 def fetchMembers(team_id)
-  blacklist = [ "houndci-bot" ]
+  blacklist = $settings["blacklist"] || []
 
   members = Octokit.team_members(team_id, { :per_page => 100 })
 
@@ -90,9 +100,17 @@ def tally(events)
 end
 
 
+########################
+# Data refresh process #
+########################
+
+puts "Starting data refresh..."
 
 # load environment vars
 Dotenv.load
+
+# load settings
+$settings = YAML.load(File.open("./settings.yml"))
 
 Octokit.auto_paginate = true
 
@@ -108,3 +126,4 @@ contributors = JSON.fast_generate(contributors)
 redis.set("contributors", contributors)
 redis.set("last_updated", DateTime.now.to_s)
 
+puts "Data refresh complete!"
